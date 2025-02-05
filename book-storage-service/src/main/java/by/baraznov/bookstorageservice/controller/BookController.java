@@ -2,38 +2,47 @@ package by.baraznov.bookstorageservice.controller;
 
 import by.baraznov.bookstorageservice.dto.CreateBookDTO;
 import by.baraznov.bookstorageservice.dto.GetBookDTO;
+import by.baraznov.bookstorageservice.service.impl.BookServiceImpl;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/books")
+@AllArgsConstructor
 public class BookController {
+
+    private final BookServiceImpl bookService;
 
     @GetMapping
     public List<GetBookDTO> getAllBooks() {
-        return null;
+        return bookService.getAllBooks();
     }
 
     @PostMapping
-    public GetBookDTO create(CreateBookDTO createBookDTO){
-        return null;
+    public GetBookDTO create(@RequestBody CreateBookDTO createBookDTO) {
+        return bookService.create(createBookDTO);
     }
-    @GetMapping("/{id}")
-    public GetBookDTO getBookById(@PathVariable int id){
-        return null;
-    }
-    @GetMapping
-    public GetBookDTO getBookByISBN(@RequestParam String ISBN){
-        return null;
-    }
-    @PatchMapping("/{id}")
-    public GetBookDTO update(@PathVariable int id,CreateBookDTO createBookDTO){
-        return null;
-    }
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id){
 
+    @GetMapping("/id/{id}")
+    public GetBookDTO getBookById(@PathVariable int id) {
+        return bookService.getBookById(id);
+    }
+
+    @GetMapping("/isbn/{isbn}")
+    public GetBookDTO getBookByISBN(@PathVariable String isbn) {
+        return bookService.getBookByISBN(isbn);
+    }
+
+    @PatchMapping("/{id}")
+    public GetBookDTO update(@PathVariable int id, @RequestBody CreateBookDTO createBookDTO) {
+        return bookService.update(id, createBookDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable int id) {
+        bookService.delete(id);
     }
 
 

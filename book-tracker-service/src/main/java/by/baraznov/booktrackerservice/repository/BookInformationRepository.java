@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface BookInformationRepository extends JpaRepository<BookInformation, Integer> {
-    List<BookInformation> findByFreeTrue();
+    List<BookInformation> findByStatusTrueAndDeletedFalse();
 }

@@ -15,13 +15,19 @@ public class BookInformationServiceImpl implements BookInformationService {
 
     @Override
     public List<BookInformation> findAllFreeBooks() {
-        return bookInformationRepository.findByFreeTrue();
+        return bookInformationRepository.findByStatusTrueAndDeletedFalse();
     }
+
+    @Override
+    public BookInformation findOne(int id) {
+        return bookInformationRepository.findById(id).orElse(null);
+    }
+
     @Override
     public void changeStatus(int id) {
         BookInformation book =  bookInformationRepository.findById(id).orElse(null);
         if(book != null) {
-            book.setFree(false);
+            book.setStatus(!book.getStatus());
             bookInformationRepository.save(book);
         }
     }

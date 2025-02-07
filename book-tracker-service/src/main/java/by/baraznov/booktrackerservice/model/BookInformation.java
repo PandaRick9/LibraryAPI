@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,12 +21,13 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class BookInformation {
     @Id
     @Column(name = "book_id")
     private Integer bookId;
     @Column(name = "status")
-    private Boolean free;
+    private Boolean status;
     @Column(name = "received_at")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime receivedAt;

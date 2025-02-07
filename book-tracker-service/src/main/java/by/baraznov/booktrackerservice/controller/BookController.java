@@ -21,13 +21,13 @@ public class BookController {
 
     @GetMapping
     public List<GetBookDTO> getAllFreeBooks(){
-        return getBookMapper.toDtos(bookInformationService.findAllFreeBooks());//TODO test all functions and create functional for kafka
+        return getBookMapper.toDtos(bookInformationService.findAllFreeBooks());
     }
 
     @PostMapping("/{id}")
     public GetBookDTO setNewStatus(@PathVariable int id){
         bookInformationService.changeStatus(id);
-        return null;
+        return getBookMapper.toDto(bookInformationService.findOne(id));
     }
 
 }

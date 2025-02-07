@@ -7,4 +7,5 @@ import java.util.List;
 public interface BookInformationService {
     void changeStatus(int id);
     List<BookInformation> findAllFreeBooks();
+    BookInformation findOne(int id);
 }

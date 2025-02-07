@@ -29,7 +29,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public GetBookDTO create(CreateBookDTO createBookDTO) {
-        bookRepository.save(createBookMapper.toEntity(createBookDTO));
+        Book book = createBookMapper.toEntity(createBookDTO);
+        book.setDeleted(false);
+        bookRepository.save(book);
         kafkaProducer.sendAddMessage(getBookByISBN(createBookDTO.getISBN()).getId());
         return getBookMapper.toDto(createBookMapper.toEntity(createBookDTO));
     }
@@ -56,7 +58,7 @@ public class BookServiceImpl implements BookService {
     public void delete(int id) {
         kafkaProducer.sendDeleteMessage(id);
         Book book = bookRepository.findById(id).orElse(null);
-        book.setDeleted(true);
-        bookRepository.save(book);//TODO Можно сделать так чтобы менялось на провотиположное
+        book.setDeleted(!book.getDeleted());
+        bookRepository.save(book);
     }
 }

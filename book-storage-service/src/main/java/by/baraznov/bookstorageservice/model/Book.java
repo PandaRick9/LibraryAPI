@@ -34,4 +34,6 @@ public class Book {
     private String description;
     @Column(name = "author")
     private String author;
+    @Column(name = "deleted")
+    private Boolean deleted;
 }

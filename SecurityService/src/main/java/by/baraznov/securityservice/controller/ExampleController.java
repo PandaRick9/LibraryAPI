@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/example")
 @RequiredArgsConstructor
 public class ExampleController {
-    private final UserService service;
 
     @GetMapping
     public String example() {

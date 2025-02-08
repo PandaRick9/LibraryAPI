@@ -21,7 +21,6 @@ import java.util.List;
 
 /**
  * Configuration class for Swagger API documentation.
- * Enables JWT-based authentication in OpenAPI definitions.
  */
 @Configuration
 @OpenAPIDefinition(

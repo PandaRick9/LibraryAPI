@@ -19,13 +19,12 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     /**
-     * Регистрация пользователя
+     * User registration
      *
-     * @param request данные пользователя
-     * @return токен
+     * @param request user data
+     * @return JWT token
      */
     public JwtAuthenticationResponse signUp(SignUpRequest request) {
-
         var user = User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -38,10 +37,10 @@ public class AuthenticationService {
     }
 
     /**
-     * Аутентификация пользователя
+     * User authentication
      *
-     * @param request данные пользователя
-     * @return токен
+     * @param request user data
+     * @return JWT token
      */
     public JwtAuthenticationResponse signIn(SignInRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -57,3 +56,4 @@ public class AuthenticationService {
         return new JwtAuthenticationResponse(jwt);
     }
 }
+

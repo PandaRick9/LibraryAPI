@@ -15,62 +15,57 @@ public class UserService {
     private final UserRepository repository;
 
     /**
-     * Сохранение пользователя
+     * Saves a user
      *
-     * @return сохраненный пользователь
+     * @return saved user
      */
     public User save(User user) {
         return repository.save(user);
     }
 
-
     /**
-     * Создание пользователя
+     * Creates a new user
      *
-     * @return созданный пользователь
+     * @return created user
      */
     public User create(User user) {
         if (repository.existsByUsername(user.getUsername())) {
-            // Заменить на свои исключения
-            throw new RuntimeException("Пользователь с таким именем уже существует");
+            // Replace with custom exceptions
+            throw new RuntimeException("User with this username already exists");
         }
 
         return save(user);
     }
 
     /**
-     * Получение пользователя по имени пользователя
+     * Retrieves a user by username
      *
-     * @return пользователь
+     * @return user
      */
     public User getByUsername(String username) {
         return repository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
-
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     /**
-     * Получение пользователя по имени пользователя
+     * Retrieves a user by username
      * <p>
-     * Нужен для Spring Security
+     * Required for Spring Security
      *
-     * @return пользователь
+     * @return user
      */
     public UserDetailsService userDetailsService() {
         return this::getByUsername;
     }
 
     /**
-     * Получение текущего пользователя
+     * Retrieves the currently authenticated user
      *
-     * @return текущий пользователь
+     * @return current user
      */
     public User getCurrentUser() {
-        // Получение имени пользователя из контекста Spring Security
+        // Get the username from the Spring Security context
         var username = SecurityContextHolder.getContext().getAuthentication().getName();
         return getByUsername(username);
     }
-
-
-
 }

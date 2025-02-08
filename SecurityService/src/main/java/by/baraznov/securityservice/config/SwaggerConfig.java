@@ -1,4 +1,4 @@
-package by.baraznov.booktrackerservice.config;
+package by.baraznov.securityservice.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -44,7 +44,7 @@ public class SwaggerConfig {
 
 
         Info info = new Info()
-                .title("Book tracker API")
+                .title("Auth API")
                 .version("1.0");
 
         return new OpenAPI().info(info).servers(List.of(devServer));

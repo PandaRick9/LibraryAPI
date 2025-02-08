@@ -37,7 +37,7 @@ public class BookInformationServiceImpl implements BookInformationService {
     }
 
     /**
-     * Toggles the status of a book between available and unavailable.
+     * Change the status of a book between available and unavailable.
      * @param id The ID of the book whose status needs to be changed.
      */
     @Override

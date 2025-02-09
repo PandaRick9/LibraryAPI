@@ -4,7 +4,6 @@ import by.baraznov.bookstorageservice.dto.CreateBookDTO;
 import by.baraznov.bookstorageservice.dto.GetBookDTO;
 import by.baraznov.bookstorageservice.service.impl.BookServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;

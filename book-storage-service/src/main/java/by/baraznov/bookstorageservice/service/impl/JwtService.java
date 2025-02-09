@@ -1,24 +1,23 @@
 package by.baraznov.bookstorageservice.service.impl;
 
 
-import by.baraznov.bookstorageservice.db2.model.User;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@Getter
+@Setter
 public class JwtService {
     @Value("${token.signing.key}")
     private String jwtSigningKey;
@@ -49,7 +48,7 @@ public class JwtService {
      * Extracts a claim from a token
      *
      * @param token           token
-     * @param claimsResolvers  function to extract claim
+     * @param claimsResolvers function to extract claim
      * @param <T>             data type
      * @return extracted claim
      */
@@ -64,7 +63,7 @@ public class JwtService {
      * @param token token
      * @return true if the token is expired
      */
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
@@ -74,7 +73,7 @@ public class JwtService {
      * @param token token
      * @return expiration date
      */
-    private Date extractExpiration(String token) {
+    public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 

@@ -9,8 +9,6 @@ import by.baraznov.bookstorageservice.mapper.book.GetBookMapper;
 
 import by.baraznov.bookstorageservice.db1.repository.BookRepository;
 import by.baraznov.bookstorageservice.service.BookService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

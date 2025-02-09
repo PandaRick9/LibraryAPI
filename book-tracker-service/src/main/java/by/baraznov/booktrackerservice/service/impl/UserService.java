@@ -16,16 +16,6 @@ public class UserService {
     private final UserRepository repository;
 
     /**
-     * Saves a user
-     *
-     * @return saved user
-     */
-    public User save(User user) {
-        return repository.save(user);
-    }
-
-
-    /**
      * Retrieves a user by username
      *
      * @return user

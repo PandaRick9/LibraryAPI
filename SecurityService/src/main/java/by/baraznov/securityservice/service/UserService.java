@@ -58,14 +58,5 @@ public class UserService {
         return this::getByUsername;
     }
 
-    /**
-     * Retrieves the currently authenticated user
-     *
-     * @return current user
-     */
-    public User getCurrentUser() {
-        // Get the username from the Spring Security context
-        var username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return getByUsername(username);
-    }
+
 }

@@ -1,9 +1,11 @@
 package by.baraznov.securityservice.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 @Schema(description = "Request object for user authentication (sign-in)")
 public class SignInRequest {
     @Schema(description = "Username of the user", example = "john_doe")

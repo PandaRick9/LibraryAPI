@@ -8,3 +8,5 @@
   1. SecurityService 8085
   2. book-storage-service 8080
   3. book-tracker-service 8081
+
+Postman коллекция находится в файле postman_collection.json

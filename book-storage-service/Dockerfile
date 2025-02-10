@@ -1,5 +1,4 @@
-FROM openjdk:17
+FROM openjdk:17-alpine
 WORKDIR /app
-EXPOSE 8080
-COPY target/book-storage-service-0.0.1-SNAPSHOT.jar book-storage-service-0.0.1-SNAPSHOT.jar
-ENTRYPOINT ["java", "-jar", "book-storage-service-0.0.1-SNAPSHOT.jar"]
+COPY target/book-storage-service-3.3.5.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]

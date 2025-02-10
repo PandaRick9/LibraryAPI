@@ -10,7 +10,6 @@
     </parent>
     <groupId>by.baraznov</groupId>
     <artifactId>book-storage-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>book-storage-service</name>
     <description>book-storage-service</description>
     <url/>

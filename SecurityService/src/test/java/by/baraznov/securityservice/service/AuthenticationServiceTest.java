@@ -1,13 +1,11 @@
 package by.baraznov.securityservice.service;
 
+
+
 import by.baraznov.securityservice.dto.JwtAuthenticationResponse;
 import by.baraznov.securityservice.dto.SignInRequest;
 import by.baraznov.securityservice.dto.SignUpRequest;
 import by.baraznov.securityservice.model.User;
-import by.baraznov.securityservice.service.AuthenticationService;
-import by.baraznov.securityservice.service.JwtService;
-import by.baraznov.securityservice.service.UserService;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

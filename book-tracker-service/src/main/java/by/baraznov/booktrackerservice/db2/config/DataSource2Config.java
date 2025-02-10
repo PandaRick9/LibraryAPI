@@ -1,9 +1,9 @@
 package by.baraznov.booktrackerservice.db2.config;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -34,7 +34,6 @@ public class DataSource2Config {
      * @return A configured DataSource bean for the second database.
      */
     @Bean(name = "secondDataSource")
-    @Primary
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setUrl(environment.getProperty("second.datasource.url"));
@@ -47,7 +46,6 @@ public class DataSource2Config {
      * Configures the entity manager factory for the second database.
      * @return A LocalContainerEntityManagerFactoryBean instance.
      */
-    @Primary
     @Bean(name = "secondEntityMangerFactoryBean")
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
         LocalContainerEntityManagerFactoryBean bean = new LocalContainerEntityManagerFactoryBean();
@@ -70,7 +68,6 @@ public class DataSource2Config {
      * @return A configured JpaTransactionManager instance.
      */
     @Bean(name = "secondTransactionManager")
-    @Primary
     public PlatformTransactionManager transactionManager() {
         JpaTransactionManager manager = new JpaTransactionManager();
         manager.setEntityManagerFactory(entityManagerFactoryBean().getObject());

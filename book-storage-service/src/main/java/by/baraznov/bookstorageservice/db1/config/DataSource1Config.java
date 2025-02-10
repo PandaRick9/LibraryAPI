@@ -1,6 +1,5 @@
 package by.baraznov.bookstorageservice.db1.config;
 
-
 import java.util.HashMap;
 import java.util.Map;
 

@@ -4,7 +4,6 @@ package by.baraznov.booktrackerservice.service.impl;
 import by.baraznov.booktrackerservice.db2.model.User;
 import by.baraznov.booktrackerservice.db2.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package by.baraznov.booktrackerservice.service;
 
-import by.baraznov.booktrackerservice.db1.model.BookInformation;
+import by.baraznov.booktrackerservice.model.BookInformation;
 
 import java.util.List;
 

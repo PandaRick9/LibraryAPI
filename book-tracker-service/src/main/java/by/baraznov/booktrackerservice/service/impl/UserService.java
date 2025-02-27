@@ -1,16 +1,18 @@
 package by.baraznov.booktrackerservice.service.impl;
 
 
-import by.baraznov.booktrackerservice.db2.model.User;
-import by.baraznov.booktrackerservice.db2.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import by.baraznov.booktrackerservice.model.User;
+import by.baraznov.booktrackerservice.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
-@RequiredArgsConstructor
+@Transactional(readOnly = true)
+@AllArgsConstructor
 public class UserService {
     private final UserRepository repository;
 

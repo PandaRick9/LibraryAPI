@@ -1,7 +1,7 @@
 package by.baraznov.booktrackerservice.kafka;
 
-import by.baraznov.booktrackerservice.db1.model.BookInformation;
-import by.baraznov.booktrackerservice.db1.repository.BookInformationRepository;
+import by.baraznov.booktrackerservice.model.BookInformation;
+import by.baraznov.booktrackerservice.repository.BookInformationRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;

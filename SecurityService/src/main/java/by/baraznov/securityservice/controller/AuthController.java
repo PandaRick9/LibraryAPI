@@ -24,7 +24,7 @@ public class AuthController {
             summary = "User registration",
             description = "Registers a new user and returns a JWT authentication response."
     )
-    @PostMapping("/sign-up")
+    @PostMapping("/signup")
     public JwtAuthenticationResponse signUp(@RequestBody SignUpRequest request) {
         return authenticationService.signUp(request);
     }
@@ -33,7 +33,7 @@ public class AuthController {
             summary = "User authentication",
             description = "Authenticates a user and returns a JWT authentication response."
     )
-    @PostMapping("/sign-in")
+    @PostMapping("/signin")
     public JwtAuthenticationResponse signIn(@RequestBody SignInRequest request) {
         return authenticationService.signIn(request);
     }

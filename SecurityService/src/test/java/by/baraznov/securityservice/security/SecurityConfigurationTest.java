@@ -47,7 +47,7 @@ public class SecurityConfigurationTest {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
+    @WithMockUser(username = "user")
     public void testAuthenticatedAccess() throws Exception {
         mockMvc.perform(get("/some-protected-endpoint"))
                 .andExpect(status().isOk());

@@ -1,43 +1,16 @@
 version: "3.8"
 services:
-  book-storage-service:
+  postgres:
     image: postgres:13
-    container_name: book-storage-service
+    container_name: postgres
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: Postgres_9
-      POSTGRES_DB: book-storage-service
+      POSTGRES_DB: postgres
     ports:
-      - "5432:5432"  # localhost:5432 → контейнер:5432
-    networks:
-      - mynetwork
+      - "5432:5432"
 
-  book-tracker-service:
-    image: postgres:13
-    container_name: book-tracker-service
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Postgres_9
-      POSTGRES_DB: book-tracker-service
-    ports:
-      - "5433:5432"  # localhost:5433 → контейнер:5432
-    networks:
-      - mynetwork
-
-  security-service:
-    image: postgres:13
-    container_name: security-service
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Postgres_9
-      POSTGRES_DB: security-service
-    ports:
-      - "5434:5432"  # localhost:5434 → контейнер:5432
-    networks:
-      - mynetwork
 
 
   zookeeper:
@@ -67,9 +40,51 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT"
       KAFKA_INTER_BROKER_LISTENER_NAME: "PLAINTEXT_INTERNAL"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+#
+#  security-service:
+#    build:
+#      context: ./SecurityService
+#      dockerfile: Dockerfile
+#    container_name: security-service
+#    depends_on:
+#      - postgres
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: Postgres_9
+#    ports:
+#      - "8085:8080"
+#
+#
+#  book-storage-service:
+#    build:
+#      context: ./book-storage-service
+#      dockerfile: Dockerfile
+#    container_name: book-storage-service
+#    depends_on:
+#      - postgres
+#      - kafka
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: Postgres_9
+#      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+#    ports:
+#      - "8080:8080"
+#
+#  book-tracker-service:
+#    build:
+#      context: ./book-tracker-service
+#      dockerfile: Dockerfile
+#    container_name: book-tracker-service
+#    depends_on:
+#      - postgres
+#      - kafka
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: Postgres_9
+#      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+#    ports:
+#      - "8081:8080"
 
-
-
-
-networks:
-  mynetwork:

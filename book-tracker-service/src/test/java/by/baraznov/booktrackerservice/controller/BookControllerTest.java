@@ -1,6 +1,6 @@
 package by.baraznov.booktrackerservice.controller;
 
-import by.baraznov.booktrackerservice.db1.model.BookInformation;
+import by.baraznov.booktrackerservice.model.BookInformation;
 import by.baraznov.booktrackerservice.dto.GetBookDTO;
 import by.baraznov.booktrackerservice.mapper.book.GetBookMapper;
 import by.baraznov.booktrackerservice.service.impl.BookInformationServiceImpl;

@@ -1,7 +1,7 @@
 package by.baraznov.bookstorageservice.service.impl;
 
-import by.baraznov.bookstorageservice.db2.model.User;
-import by.baraznov.bookstorageservice.db2.repository.UserRepository;
+import by.baraznov.bookstorageservice.model.User;
+import by.baraznov.bookstorageservice.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

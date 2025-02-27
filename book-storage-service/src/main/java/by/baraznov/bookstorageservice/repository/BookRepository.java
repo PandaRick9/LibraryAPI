@@ -1,6 +1,6 @@
-package by.baraznov.bookstorageservice.db1.repository;
+package by.baraznov.bookstorageservice.repository;
 
-import by.baraznov.bookstorageservice.db1.model.Book;
+import by.baraznov.bookstorageservice.model.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

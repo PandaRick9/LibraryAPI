@@ -1,8 +1,8 @@
 package by.baraznov.booktrackerservice.service.impl;
 
 
-import by.baraznov.booktrackerservice.db2.model.User;
-import by.baraznov.booktrackerservice.db2.repository.UserRepository;
+import by.baraznov.booktrackerservice.model.User;
+import by.baraznov.booktrackerservice.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

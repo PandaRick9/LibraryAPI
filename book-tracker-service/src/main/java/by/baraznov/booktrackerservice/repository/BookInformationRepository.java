@@ -1,6 +1,6 @@
-package by.baraznov.booktrackerservice.db1.repository;
+package by.baraznov.booktrackerservice.repository;
 
-import by.baraznov.booktrackerservice.db1.model.BookInformation;
+import by.baraznov.booktrackerservice.model.BookInformation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

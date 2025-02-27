@@ -1,4 +1,4 @@
-package by.baraznov.booktrackerservice.db1.model;
+package by.baraznov.booktrackerservice.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;

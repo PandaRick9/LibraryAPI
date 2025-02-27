@@ -1,7 +1,7 @@
 package by.baraznov.bookstorageservice.service.impl;
 
-import by.baraznov.bookstorageservice.db1.model.Book;
-import by.baraznov.bookstorageservice.db1.repository.BookRepository;
+import by.baraznov.bookstorageservice.model.Book;
+import by.baraznov.bookstorageservice.repository.BookRepository;
 import by.baraznov.bookstorageservice.dto.CreateBookDTO;
 import by.baraznov.bookstorageservice.dto.GetBookDTO;
 import by.baraznov.bookstorageservice.kafka.KafkaProducer;

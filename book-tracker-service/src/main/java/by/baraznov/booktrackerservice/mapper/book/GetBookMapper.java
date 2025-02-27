@@ -3,7 +3,7 @@ package by.baraznov.booktrackerservice.mapper.book;
 
 import by.baraznov.booktrackerservice.dto.GetBookDTO;
 import by.baraznov.booktrackerservice.mapper.BaseMapper;
-import by.baraznov.booktrackerservice.db1.model.BookInformation;
+import by.baraznov.booktrackerservice.model.BookInformation;
 import org.mapstruct.Mapper;
 
 /**

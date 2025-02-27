@@ -1,14 +1,16 @@
 package by.baraznov.bookstorageservice.service.impl;
 
-import by.baraznov.bookstorageservice.db2.model.User;
-import by.baraznov.bookstorageservice.db2.repository.UserRepository;
+import by.baraznov.bookstorageservice.model.User;
+import by.baraznov.bookstorageservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository repository;
@@ -18,6 +20,7 @@ public class UserService {
      *
      * @return saved user
      */
+    @Transactional
     public User save(User user) {
         return repository.save(user);
     }
@@ -28,6 +31,7 @@ public class UserService {
      *
      * @return created user
      */
+    @Transactional
     public User create(User user) {
         if (repository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("Пользователь с таким именем уже существует");

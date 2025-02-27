@@ -1,10 +1,11 @@
 package by.baraznov.booktrackerservice.service.impl;
 
-import by.baraznov.booktrackerservice.db1.model.BookInformation;
-import by.baraznov.booktrackerservice.db1.repository.BookInformationRepository;
+import by.baraznov.booktrackerservice.model.BookInformation;
+import by.baraznov.booktrackerservice.repository.BookInformationRepository;
 import by.baraznov.booktrackerservice.service.BookInformationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * Service implementation for managing book information.
  */
 @Service
+@Transactional(readOnly = true)
 @AllArgsConstructor
 public class BookInformationServiceImpl implements BookInformationService {
 
@@ -41,6 +43,7 @@ public class BookInformationServiceImpl implements BookInformationService {
      * @param id The ID of the book whose status needs to be changed.
      */
     @Override
+    @Transactional
     public void changeStatus(int id) {
         BookInformation book = bookInformationRepository.findById(id).orElse(null);
         if (book != null) {

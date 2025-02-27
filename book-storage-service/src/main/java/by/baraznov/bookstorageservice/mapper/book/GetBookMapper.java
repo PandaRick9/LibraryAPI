@@ -2,7 +2,7 @@ package by.baraznov.bookstorageservice.mapper.book;
 
 import by.baraznov.bookstorageservice.dto.GetBookDTO;
 import by.baraznov.bookstorageservice.mapper.BaseMapper;
-import by.baraznov.bookstorageservice.db1.model.Book;
+import by.baraznov.bookstorageservice.model.Book;
 import org.mapstruct.Mapper;
 
 /**

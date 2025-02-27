@@ -1,16 +1,19 @@
 package by.baraznov.bookstorageservice.service.impl;
 
-import by.baraznov.bookstorageservice.db1.model.Book;
+import by.baraznov.bookstorageservice.model.Book;
 import by.baraznov.bookstorageservice.dto.CreateBookDTO;
 import by.baraznov.bookstorageservice.dto.GetBookDTO;
 import by.baraznov.bookstorageservice.kafka.KafkaProducer;
 import by.baraznov.bookstorageservice.mapper.book.CreateBookMapper;
 import by.baraznov.bookstorageservice.mapper.book.GetBookMapper;
 
-import by.baraznov.bookstorageservice.db1.repository.BookRepository;
+import by.baraznov.bookstorageservice.repository.BookRepository;
 import by.baraznov.bookstorageservice.service.BookService;
+import by.baraznov.util.BookAlreadyExists;
+import by.baraznov.util.BookNotFound;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +21,7 @@ import java.util.List;
  * Service implementation for managing books.
  */
 @Service
+@Transactional(readOnly = true)
 @AllArgsConstructor
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
@@ -42,9 +46,13 @@ public class BookServiceImpl implements BookService {
      * @return the created book DTO
      */
     @Override
+    @Transactional
     public GetBookDTO create(CreateBookDTO createBookDTO) {
         Book book = createBookMapper.toEntity(createBookDTO);
         book.setDeleted(false);
+        Book bookByISBN = bookRepository.findByIsbnAndDeletedFalse(book.getIsbn());
+        if(bookByISBN.getIsbn().equals(book.getIsbn()))
+            throw new BookAlreadyExists("There is already a book with that isbn: " + book.getIsbn());
         bookRepository.save(book);
         kafkaProducer.sendAddMessage(getBookByISBN(createBookDTO.getIsbn()).getId());
         return getBookMapper.toDto(createBookMapper.toEntity(createBookDTO));
@@ -58,6 +66,9 @@ public class BookServiceImpl implements BookService {
      */
     @Override
     public GetBookDTO getBookById(int id) {
+        Book book = bookRepository.findByIdAndDeletedFalse(id);
+        if(book == null)
+            throw new BookNotFound("Book not found with id: " + id);
         return getBookMapper.toDto(bookRepository.findByIdAndDeletedFalse(id));
     }
     /**
@@ -68,7 +79,10 @@ public class BookServiceImpl implements BookService {
      */
     @Override
     public GetBookDTO getBookByISBN(String ISBN) {
-        return getBookMapper.toDto(bookRepository.findByIsbnAndDeletedFalse(ISBN));
+        Book book = bookRepository.findByIsbnAndDeletedFalse(ISBN);
+        if(book == null)
+            throw new BookNotFound("Book not found with isbn: " + ISBN);
+        return getBookMapper.toDto(book);
     }
 
     /**
@@ -79,8 +93,9 @@ public class BookServiceImpl implements BookService {
      * @return the updated book DTO
      */
     @Override
+    @Transactional
     public GetBookDTO update(int id, CreateBookDTO createBookDTO) {
-        Book book = bookRepository.findById(id).orElse(null);
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFound("Book not found with id: " + id));
         createBookMapper.merge(book, createBookDTO);
         bookRepository.save(book);
         return getBookMapper.toDto(book);
@@ -91,10 +106,12 @@ public class BookServiceImpl implements BookService {
      * @param id book ID
      */
     @Override
+    @Transactional
     public void delete(int id) {
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFound("Book not found with id: " + id));
         kafkaProducer.sendDeleteMessage(id);
-        Book book = bookRepository.findById(id).orElse(null);
         book.setDeleted(!book.getDeleted());
+
         bookRepository.save(book);
     }
 }

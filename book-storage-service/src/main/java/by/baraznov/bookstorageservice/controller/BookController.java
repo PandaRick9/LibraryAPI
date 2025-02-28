@@ -6,12 +6,10 @@ import by.baraznov.bookstorageservice.service.impl.BookServiceImpl;
 import by.baraznov.util.BookAlreadyExists;
 import by.baraznov.util.BookNotFound;
 import by.baraznov.util.ErrorResponse;
-import by.baraznov.util.InvalidDataException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -41,8 +39,7 @@ public class BookController {
     )
     @GetMapping
     public ResponseEntity<List<GetBookDTO>> getAllBooks() {
-        List<GetBookDTO> books = bookService.getAllBooks();
-        return ResponseEntity.ok(books);
+        return ResponseEntity.ok(bookService.getAllBooks());
     }
 
     @Operation(
@@ -52,17 +49,8 @@ public class BookController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody @Valid CreateBookDTO createBookDTO,
                              BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            StringBuilder errorMsg = new StringBuilder();
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for(FieldError error : errors){
-                errorMsg.append(error.getField())
-                        .append(" - ").append(error.getDefaultMessage())
-                        .append(";");
-            }
-            ErrorResponse errorResponse = new ErrorResponse(errorMsg.toString(), HttpStatus.BAD_REQUEST.value());
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-        }
+        ResponseEntity<?> errorResponseBindingResult = checkBindingResultError(bindingResult);
+        if (errorResponseBindingResult != null) return errorResponseBindingResult;
         try {
             GetBookDTO book = bookService.create(createBookDTO);
             return ResponseEntity.ok(book);
@@ -118,7 +106,10 @@ public class BookController {
             description = "Receiving id and DTO and update info about book. After that updating info  in database"
     )
     @PatchMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable int id, @RequestBody CreateBookDTO createBookDTO) {
+    public ResponseEntity<?> update(@PathVariable int id, @RequestBody  @Valid CreateBookDTO createBookDTO,
+                                    BindingResult bindingResult) {
+        ResponseEntity<?> errorResponseBindingResult = checkBindingResultError(bindingResult);
+        if (errorResponseBindingResult != null) return errorResponseBindingResult;
         try {
             GetBookDTO updatedBook = bookService.update(id, createBookDTO);
             return ResponseEntity.ok(updatedBook);
@@ -130,6 +121,8 @@ public class BookController {
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 
     @Operation(
             summary = "Deleting book",
@@ -148,6 +141,27 @@ public class BookController {
             ErrorResponse errorResponse = new ErrorResponse("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR.value());
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+    /**
+     * Check errors in BindingResult
+     *
+     * @return ResponseEntity
+     */
+    private ResponseEntity<?> checkBindingResultError(BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            StringBuilder errorMsg = new StringBuilder();
+            List<FieldError> errors = bindingResult.getFieldErrors();
+            for(FieldError error : errors){
+                errorMsg.append(error.getField())
+                        .append(" - ").append(error.getDefaultMessage())
+                        .append(";");
+            }
+            ErrorResponse errorResponse = new ErrorResponse(errorMsg.toString(), HttpStatus.BAD_REQUEST.value());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        return null;
     }
 
 

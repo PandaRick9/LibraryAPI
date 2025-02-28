@@ -3,6 +3,7 @@ package by.baraznov.booktrackerservice.service.impl;
 import by.baraznov.booktrackerservice.model.BookInformation;
 import by.baraznov.booktrackerservice.repository.BookInformationRepository;
 import by.baraznov.booktrackerservice.service.BookInformationService;
+import by.baraznov.booktrackerservice.util.BookNotFound;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +36,7 @@ public class BookInformationServiceImpl implements BookInformationService {
      */
     @Override
     public BookInformation findOne(int id) {
-        return bookInformationRepository.findById(id).orElse(null);
+        return bookInformationRepository.findById(id).orElseThrow(() -> new BookNotFound("Book not found with id: " + id));
     }
 
     /**
@@ -45,7 +46,7 @@ public class BookInformationServiceImpl implements BookInformationService {
     @Override
     @Transactional
     public void changeStatus(int id) {
-        BookInformation book = bookInformationRepository.findById(id).orElse(null);
+        BookInformation book = bookInformationRepository.findById(id).orElseThrow(() -> new BookNotFound("Book not found with id: " + id));
         if (book != null) {
             book.setStatus(!book.getStatus());
             bookInformationRepository.save(book);

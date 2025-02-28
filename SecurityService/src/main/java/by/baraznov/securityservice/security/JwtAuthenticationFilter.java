@@ -2,7 +2,6 @@ package by.baraznov.securityservice.security;
 
 import by.baraznov.securityservice.service.JwtService;
 import by.baraznov.securityservice.service.UserService;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,11 +32,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     /**
      * Filters incoming requests to validate JWT tokens and set up security context.
      *
-     * @param request HTTP request
-     * @param response HTTP response
+     * @param request     HTTP request
+     * @param response    HTTP response
      * @param filterChain request filter chain
      * @throws ServletException if servlet error occurs
-     * @throws IOException if I/O error occurs
+     * @throws IOException      if I/O error occurs
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

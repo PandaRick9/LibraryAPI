@@ -1,6 +1,7 @@
 package by.baraznov.securityservice.security;
 
 import by.baraznov.securityservice.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -91,4 +92,6 @@ public class SecurityConfiguration {
             throws Exception {
         return config.getAuthenticationManager();
     }
+
+
 }

@@ -1,6 +1,8 @@
 package by.baraznov.securityservice.util;
 
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -22,6 +24,19 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException ex) {
+        StringBuilder errorMsg = new StringBuilder("Validation failed: ");
+        for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
+            errorMsg.append(violation.getPropertyPath())
+                    .append(" - ").append(violation.getMessage())
+                    .append("; ");
+        }
+
+        ErrorResponse errorResponse = new ErrorResponse(errorMsg.toString(), HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public  ResponseEntity<ErrorResponse> handleNoHandlerFoundException(NoHandlerFoundException ex) {

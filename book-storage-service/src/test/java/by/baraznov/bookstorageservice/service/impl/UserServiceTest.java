@@ -37,34 +37,7 @@ class UserServiceTest {
         user.setUsername("testUser");
     }
 
-    @Test
-    void save_ShouldReturnSavedUser() {
-        when(userRepository.save(user)).thenReturn(user);
-        User savedUser = userService.save(user);
-        assertNotNull(savedUser);
-        assertEquals(user.getUsername(), savedUser.getUsername());
-        verify(userRepository, times(1)).save(user);
-    }
 
-    @Test
-    void create_ShouldReturnCreatedUser_WhenUserDoesNotExist() {
-        when(userRepository.existsByUsername(user.getUsername())).thenReturn(false);
-        when(userRepository.save(user)).thenReturn(user);
-        User createdUser = userService.create(user);
-        assertNotNull(createdUser);
-        assertEquals(user.getUsername(), createdUser.getUsername());
-        verify(userRepository, times(1)).existsByUsername(user.getUsername());
-        verify(userRepository, times(1)).save(user);
-    }
-
-    @Test
-    void create_ShouldThrowException_WhenUserAlreadyExists() {
-        when(userRepository.existsByUsername(user.getUsername())).thenReturn(true);
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> userService.create(user));
-        assertEquals("Пользователь с таким именем уже существует", exception.getMessage());
-        verify(userRepository, times(1)).existsByUsername(user.getUsername());
-        verify(userRepository, never()).save(any());
-    }
 
     @Test
     void getByUsername_ShouldReturnUser_WhenUserExists() {

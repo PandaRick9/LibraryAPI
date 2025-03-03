@@ -1,5 +1,7 @@
 package by.baraznov.bookstorageservice.service.impl;
 
+import by.baraznov.bookstorageservice.dto.UpdateBookDTO;
+import by.baraznov.bookstorageservice.mapper.book.UpdateBookMapper;
 import by.baraznov.bookstorageservice.model.Book;
 import by.baraznov.bookstorageservice.dto.CreateBookDTO;
 import by.baraznov.bookstorageservice.dto.GetBookDTO;
@@ -26,6 +28,7 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final GetBookMapper getBookMapper;
+    private final UpdateBookMapper updateBookMapper;
     private final CreateBookMapper createBookMapper;
     private final KafkaProducer kafkaProducer;
 
@@ -51,8 +54,10 @@ public class BookServiceImpl implements BookService {
         Book book = createBookMapper.toEntity(createBookDTO);
         book.setDeleted(false);
         Book bookByISBN = bookRepository.findByIsbnAndDeletedFalse(book.getIsbn());
-        if(bookByISBN.getIsbn().equals(book.getIsbn()))
-            throw new BookAlreadyExists("There is already a book with that isbn: " + book.getIsbn());
+        if(bookByISBN != null) {
+            if (bookByISBN.getIsbn().equals(book.getIsbn()))
+                throw new BookAlreadyExists("There is already a book with that isbn: " + book.getIsbn());
+        }
         bookRepository.save(book);
         kafkaProducer.sendAddMessage(getBookByISBN(createBookDTO.getIsbn()).getId());
         return getBookMapper.toDto(createBookMapper.toEntity(createBookDTO));
@@ -89,14 +94,14 @@ public class BookServiceImpl implements BookService {
      * Updates the book details.
      *
      * @param id book ID
-     * @param createBookDTO DTO containing updated details
+     * @param updateBookDTO DTO containing updated details
      * @return the updated book DTO
      */
     @Override
     @Transactional
-    public GetBookDTO update(int id, CreateBookDTO createBookDTO) {
+    public GetBookDTO update(int id, UpdateBookDTO updateBookDTO) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFound("Book not found with id: " + id));
-        createBookMapper.merge(book, createBookDTO);
+        updateBookMapper.merge(book, updateBookDTO);
         bookRepository.save(book);
         return getBookMapper.toDto(book);
     }

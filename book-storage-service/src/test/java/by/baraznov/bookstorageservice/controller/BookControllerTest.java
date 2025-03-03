@@ -2,6 +2,7 @@ package by.baraznov.bookstorageservice.controller;
 
 import by.baraznov.bookstorageservice.dto.CreateBookDTO;
 import by.baraznov.bookstorageservice.dto.GetBookDTO;
+import by.baraznov.bookstorageservice.dto.UpdateBookDTO;
 import by.baraznov.bookstorageservice.service.impl.BookServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,7 +84,7 @@ class BookControllerTest {
     @Test
     void update_ShouldReturnUpdatedBook() throws Exception {
         GetBookDTO getBookDTO = new GetBookDTO();
-        when(bookService.update(anyInt(), any(CreateBookDTO.class))).thenReturn(getBookDTO);
+        when(bookService.update(anyInt(), any(UpdateBookDTO.class))).thenReturn(getBookDTO);
 
         mockMvc = MockMvcBuilders.standaloneSetup(bookController).build();
 

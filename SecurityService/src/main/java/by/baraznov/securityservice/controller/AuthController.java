@@ -66,7 +66,6 @@ public class AuthController {
             ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
             return new ResponseEntity<>(errorResponse,HttpStatus.BAD_REQUEST);
         }catch (Exception ex) {
-            ex.printStackTrace();
             ErrorResponse errorResponse = new ErrorResponse("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR.value());
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }

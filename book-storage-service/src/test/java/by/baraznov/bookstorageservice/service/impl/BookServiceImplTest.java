@@ -1,5 +1,6 @@
 package by.baraznov.bookstorageservice.service.impl;
 
+import by.baraznov.bookstorageservice.dto.UpdateBookDTO;
 import by.baraznov.bookstorageservice.model.Book;
 import by.baraznov.bookstorageservice.repository.BookRepository;
 import by.baraznov.bookstorageservice.dto.CreateBookDTO;
@@ -43,6 +44,7 @@ class BookServiceImplTest {
     private Book book;
     private GetBookDTO getBookDTO;
     private CreateBookDTO createBookDTO;
+    private UpdateBookDTO updateBookDTO;
 
     @BeforeEach
     void setUp() {
@@ -53,6 +55,7 @@ class BookServiceImplTest {
 
         getBookDTO = new GetBookDTO();
         createBookDTO = new CreateBookDTO();
+        updateBookDTO = new UpdateBookDTO();
     }
 
     @Test
@@ -94,7 +97,7 @@ class BookServiceImplTest {
     void update_ShouldUpdateBook() {
         when(bookRepository.findById(1)).thenReturn(Optional.of(book));
         when(getBookMapper.toDto(book)).thenReturn(getBookDTO);
-        GetBookDTO result = bookService.update(1, createBookDTO);
+        GetBookDTO result = bookService.update(1, updateBookDTO);
         assertNotNull(result);
         verify(bookRepository, times(1)).save(book);
     }

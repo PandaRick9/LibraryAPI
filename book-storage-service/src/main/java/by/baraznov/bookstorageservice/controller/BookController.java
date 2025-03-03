@@ -2,6 +2,7 @@ package by.baraznov.bookstorageservice.controller;
 
 import by.baraznov.bookstorageservice.dto.CreateBookDTO;
 import by.baraznov.bookstorageservice.dto.GetBookDTO;
+import by.baraznov.bookstorageservice.dto.UpdateBookDTO;
 import by.baraznov.bookstorageservice.service.impl.BookServiceImpl;
 import by.baraznov.util.BookAlreadyExists;
 import by.baraznov.util.BookNotFound;
@@ -58,6 +59,7 @@ public class BookController {
             ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }catch (Exception ex) {
+            ex.printStackTrace();
             ErrorResponse errorResponse = new ErrorResponse("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR.value());
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -106,12 +108,12 @@ public class BookController {
             description = "Receiving id and DTO and update info about book. After that updating info  in database"
     )
     @PatchMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable int id, @RequestBody  @Valid CreateBookDTO createBookDTO,
+    public ResponseEntity<?> update(@PathVariable int id, @RequestBody  @Valid UpdateBookDTO updateBookDTO,
                                     BindingResult bindingResult) {
         ResponseEntity<?> errorResponseBindingResult = checkBindingResultError(bindingResult);
         if (errorResponseBindingResult != null) return errorResponseBindingResult;
         try {
-            GetBookDTO updatedBook = bookService.update(id, createBookDTO);
+            GetBookDTO updatedBook = bookService.update(id, updateBookDTO);
             return ResponseEntity.ok(updatedBook);
         } catch (BookNotFound ex) {
             ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND.value());

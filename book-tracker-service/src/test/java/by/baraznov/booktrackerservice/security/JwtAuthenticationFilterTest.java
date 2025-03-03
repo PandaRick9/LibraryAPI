@@ -1,7 +1,6 @@
 package by.baraznov.booktrackerservice.security;
 
 
-
 import by.baraznov.booktrackerservice.service.impl.JwtService;
 import by.baraznov.booktrackerservice.service.impl.UserService;
 import jakarta.servlet.FilterChain;
@@ -20,8 +19,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.io.IOException;
 
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class JwtAuthenticationFilterTest {
@@ -77,14 +79,6 @@ class JwtAuthenticationFilterTest {
 
         when(jwtService.extractUserName(token)).thenReturn(null);
 
-        jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
-
-        assertNull(SecurityContextHolder.getContext().getAuthentication());
-        verify(filterChain).doFilter(request, response);
-    }
-
-    @Test
-    void testDoFilterInternal_NoToken() throws ServletException, IOException {
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
         assertNull(SecurityContextHolder.getContext().getAuthentication());

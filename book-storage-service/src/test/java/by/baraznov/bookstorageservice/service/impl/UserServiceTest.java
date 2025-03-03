@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -51,8 +52,8 @@ class UserServiceTest {
     @Test
     void getByUsername_ShouldThrowException_WhenUserNotFound() {
         when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
-        UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class, () -> userService.getByUsername(user.getUsername()));
-        assertEquals("Пользователь не найден", exception.getMessage());
+        InternalAuthenticationServiceException exception = assertThrows(InternalAuthenticationServiceException.class, () -> userService.getByUsername(user.getUsername()));
+        assertEquals("User not found", exception.getMessage());
         verify(userRepository, times(1)).findByUsername(user.getUsername());
     }
 

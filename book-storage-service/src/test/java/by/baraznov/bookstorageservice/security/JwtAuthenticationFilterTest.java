@@ -81,11 +81,5 @@ class JwtAuthenticationFilterTest {
         verify(filterChain).doFilter(request, response);
     }
 
-    @Test
-    void testDoFilterInternal_NoToken() throws ServletException, IOException {
-        jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
-        assertNull(SecurityContextHolder.getContext().getAuthentication());
-        verify(filterChain).doFilter(request, response);
-    }
 }

@@ -1,21 +1,30 @@
 package by.baraznov.securityservice.controller;
 
+import by.baraznov.securityservice.controller.AuthController;
 import by.baraznov.securityservice.dto.JwtAuthenticationResponse;
 import by.baraznov.securityservice.dto.SignInRequest;
 import by.baraznov.securityservice.dto.SignUpRequest;
 import by.baraznov.securityservice.service.AuthenticationService;
+import by.baraznov.securityservice.util.ErrorResponse;
+import by.baraznov.securityservice.util.UserAlreadyExists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 public class AuthControllerTest {
@@ -23,47 +32,97 @@ public class AuthControllerTest {
     @Mock
     private AuthenticationService authenticationService;
 
+    @Mock
+    private BindingResult bindingResult;
+
     @InjectMocks
     private AuthController authController;
 
-    private MockMvc mockMvc;
+    private SignUpRequest signUpRequest;
+    private SignInRequest signInRequest;
 
     @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
+        signUpRequest = new SignUpRequest("username", "password");
+        signInRequest = new SignInRequest("username", "password");
     }
 
     @Test
-    void signUp_ValidRequest_ShouldReturnJwtResponse() throws Exception {
-        SignUpRequest signUpRequest = new SignUpRequest("user", "password");
-        JwtAuthenticationResponse jwtResponse = new JwtAuthenticationResponse("jwtToken");
+    public void testSignUp_Success() throws UserAlreadyExists {
+        when(authenticationService.signUp(any(SignUpRequest.class))).thenReturn(new JwtAuthenticationResponse("token"));
+        when(bindingResult.hasErrors()).thenReturn(false);
 
-        when(authenticationService.signUp(signUpRequest)).thenReturn(jwtResponse);
+        ResponseEntity<?> response = authController.signUp(signUpRequest, bindingResult);
 
-        mockMvc.perform(post("/auth/sign-up")
-                        .contentType("application/json")
-                        .content("{\"username\":\"user\",\"password\":\"password\"}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").value("jwtToken"));
-
-        verify(authenticationService, times(1)).signUp(signUpRequest);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(authenticationService, times(1)).signUp(any(SignUpRequest.class));
     }
 
     @Test
-    void signIn_ValidRequest_ShouldReturnJwtResponse() throws Exception {
-        SignInRequest signInRequest = new SignInRequest("user", "password");
-        JwtAuthenticationResponse jwtResponse = new JwtAuthenticationResponse("jwtToken");
+    public void testSignUp_UserAlreadyExists() throws UserAlreadyExists {
+        when(bindingResult.hasErrors()).thenReturn(false);
+        when(authenticationService.signUp(any(SignUpRequest.class))).thenThrow(new UserAlreadyExists("User already exists"));
 
-        when(authenticationService.signIn(signInRequest)).thenReturn(jwtResponse);
+        ResponseEntity<?> response = authController.signUp(signUpRequest, bindingResult);
 
-        mockMvc.perform(post("/auth/sign-in")
-                        .contentType("application/json")
-                        .content("{\"username\":\"user\",\"password\":\"password\"}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").value("jwtToken"));
-
-        verify(authenticationService, times(1)).signIn(signInRequest);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("User already exists", ((ErrorResponse) response.getBody()).getMessage());
     }
 
+    @Test
+    public void testSignUp_BindingResultError() {
+        when(bindingResult.hasErrors()).thenReturn(true);
+        FieldError fieldError = new FieldError("signUpRequest", "username", "Username is required");
+        when(bindingResult.getFieldErrors()).thenReturn(Collections.singletonList(fieldError));
 
+        ResponseEntity<?> response = authController.signUp(signUpRequest, bindingResult);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("username - Username is required;", ((ErrorResponse) response.getBody()).getMessage());
+    }
+
+    @Test
+    public void testSignIn_Success() {
+        when(authenticationService.signIn(any(SignInRequest.class))).thenReturn(new JwtAuthenticationResponse("token"));
+        when(bindingResult.hasErrors()).thenReturn(false);
+
+        ResponseEntity<?> response = authController.signIn(signInRequest, bindingResult);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(authenticationService, times(1)).signIn(any(SignInRequest.class));
+    }
+
+    @Test
+    public void testSignIn_InternalAuthenticationServiceException() {
+        when(bindingResult.hasErrors()).thenReturn(false);
+        when(authenticationService.signIn(any(SignInRequest.class))).thenThrow(new InternalAuthenticationServiceException("Invalid credentials"));
+
+        ResponseEntity<?> response = authController.signIn(signInRequest, bindingResult);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Invalid credentials", ((ErrorResponse) response.getBody()).getMessage());
+    }
+
+    @Test
+    public void testSignIn_BindingResultError() {
+        when(bindingResult.hasErrors()).thenReturn(true);
+        FieldError fieldError = new FieldError("signInRequest", "password", "Password is required");
+        when(bindingResult.getFieldErrors()).thenReturn(Collections.singletonList(fieldError));
+
+        ResponseEntity<?> response = authController.signIn(signInRequest, bindingResult);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("password - Password is required;", ((ErrorResponse) response.getBody()).getMessage());
+    }
+
+    @Test
+    public void testSignIn_InternalServerError() {
+        when(bindingResult.hasErrors()).thenReturn(false);
+        when(authenticationService.signIn(any(SignInRequest.class))).thenThrow(new RuntimeException("Unexpected error"));
+
+        ResponseEntity<?> response = authController.signIn(signInRequest, bindingResult);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals("An unexpected error occurred", ((ErrorResponse) response.getBody()).getMessage());
+    }
 }
